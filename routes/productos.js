@@ -1,4 +1,5 @@
 const express = require("express");
+const {requiredScopes} = require("express-oauth2-jwt-bearer");
 const route = express.Router();
 
 //simulacion de base de datos
@@ -21,7 +22,7 @@ let productos = [
 ];
 
 //mostrar productos
-route.get('/',(req, res, next)=>{
+route.get('/', requiredScopes("read: productos"),(req, res, next)=>{
     try {
         res.json(productos); 
     } catch (error) {
@@ -31,7 +32,7 @@ route.get('/',(req, res, next)=>{
 });
 
 //muestro producto por id
-route.get('/:id',(req, res, next)=>{
+route.get('/:id', requiredScopes("read: productos"),(req, res, next)=>{
     try {
         const id = parseInt(req.params.id);
         const producto = productos.find((p) => p.id == id);
@@ -49,7 +50,7 @@ route.get('/:id',(req, res, next)=>{
 });
 
 //creo un producto
-route.post('/',(req, res, next)=>{
+route.post('/', requiredScopes("write: productos"),(req, res, next)=>{
     try {
         const {nombre, precio} = req.body;
 
@@ -67,7 +68,7 @@ route.post('/',(req, res, next)=>{
 });
 
 //modificar producto
-route.put('/:id',(req, res, next)=>{
+route.put('/:id', requiredScopes("write: productos"),(req, res, next)=>{
     try {
         const id = parseInt(req.params.id);
         const {nombre, precio} = req.body;
@@ -92,7 +93,7 @@ route.put('/:id',(req, res, next)=>{
 });
 
 //borrar producto
-route.delete('/:id',(req, res, next)=>{
+route.delete('/:id', requiredScopes("write: productos"),(req, res, next)=>{
     try {
         const id = parseInt(req.params.id);
         const index = productos.findIndex((p)=> p.id == id);

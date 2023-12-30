@@ -1,8 +1,8 @@
 const express = require("express");
-const app = express();
 const {auth} = require("express-oauth2-jwt-bearer");
 const productosRouter = require ("./routes/productos");
-const errorHandler = require("./middleware/errorHandler");
+const errorHanddler = require("./middleware/errorHandler");
+
 
 const jwtCheck = auth({
     audience: 'http://localhost:3000/productos',
@@ -13,12 +13,15 @@ const jwtCheck = auth({
 //linea para validar todas las rutas
 // app.use(jwtCheck);
 
+const app = express();
+app.use(express.json());
+
 app.get('/', (req, res) => {
     res.send("AI de productos");
 });
 app.use("/productos", jwtCheck , productosRouter);
 
-app.use(errorHandler);
+app.use(errorHanddler);
 
 const port = process.env.port || 3000;
 app.listen(port, () => {
